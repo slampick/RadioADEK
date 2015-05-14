@@ -53,6 +53,7 @@ public class FirstActivity extends ActionBarActivity {
                     mpTask = new MediaPlayerTask(getApplicationContext(), radio.getUrlStream());
                     mpTask.execute();
                 }
+                currentPosition = position;
 
             }
         });
