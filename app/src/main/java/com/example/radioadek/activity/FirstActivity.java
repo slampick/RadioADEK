@@ -32,6 +32,29 @@ public class FirstActivity extends ActionBarActivity {
 
         ArrayList<Radio> radios = new ArrayList<>();
 
+        fillRadio(radios);
+
+        adapter = new RadioAdapter(this.getApplicationContext(), radios);
+        list.setAdapter(adapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(mpTask != null && currentPosition == position) {
+                    mpTask.stop();
+                }
+                else {
+                    Radio radio = (Radio) adapter.getItem(position);
+                    mpTask = new MediaPlayerTask(getApplicationContext(), radio.getUrlStream());
+                    mpTask.execute();
+                }
+                currentPosition = position;
+
+            }
+        });
+    }
+
+    private void fillRadio(ArrayList<Radio> radios) {
         radios.add(new Radio("Radio Record", "Station, Deep, Breaks, Dancecore, Dubstep, Trap," +
                 "Hardstyle, Rock",
                 BitmapFactory.decodeResource(getResources(), R.drawable.record),
@@ -63,25 +86,6 @@ public class FirstActivity extends ActionBarActivity {
         radios.add(new Radio("Шансон FM", "Шансон",
                 BitmapFactory.decodeResource(getResources(), R.drawable.shanson),
                 "http://music.myradio.com.ua:8000/shanson128.mp3"));
-
-        adapter = new RadioAdapter(this.getApplicationContext(), radios);
-        list.setAdapter(adapter);
-
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(mpTask != null && currentPosition == position) {
-                    mpTask.stop();
-                }
-                else {
-                    Radio radio = (Radio) adapter.getItem(position);
-                    mpTask = new MediaPlayerTask(getApplicationContext(), radio.getUrlStream());
-                    mpTask.execute();
-                }
-                currentPosition = position;
-
-            }
-        });
     }
 
 
