@@ -1,16 +1,22 @@
 package com.example.radioadek.activity;
 
 import android.graphics.BitmapFactory;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.radioadek.R;
 import com.example.radioadek.adapter.RadioAdapter;
+import com.example.radioadek.fragment.RadioFragment;
 import com.example.radioadek.model.Radio;
 import com.example.radioadek.util.MediaPlayerTask;
 
@@ -19,44 +25,53 @@ import java.util.ArrayList;
 
 public class FirstActivity extends ActionBarActivity {
 
-    private static MediaPlayerTask mpTask;
-    private static int currentPosition = Integer.MAX_VALUE;
-    private static RadioAdapter adapter;
+    private LinearLayout rootLeft;
+    private ArrayList<Radio> radios;
+    private ListView radioList;
+    private TextView currentPlayFlag;
+
+    private int currentPosition = Integer.MAX_VALUE;
+
+    private int currentDrawerPosition;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first);
+        setContentView(R.layout.radio_drawer_layout);
 
-        ListView list = (ListView) findViewById(R.id.radio_list);
+        rootLeft = (LinearLayout) findViewById(R.id.root_left);
+        drawerLayout = (DrawerLayout) findViewById(R.id.root_drawer);
 
-        ArrayList<Radio> radios = new ArrayList<>();
-
+        radios = new ArrayList<>();
         fillRadio(radios);
 
-        adapter = new RadioAdapter(this.getApplicationContext(), radios);
-        list.setAdapter(adapter);
+        radioList = (ListView) findViewById(R.id.radio_list);
+        final RadioAdapter adapter = new RadioAdapter(getApplicationContext(), radios);
+        radioList.setAdapter(adapter);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(mpTask != null && currentPosition == position) {
-                    mpTask.stop();
-                }
-                else {
-                    Radio radio = (Radio) adapter.getItem(position);
-                    mpTask = new MediaPlayerTask(getApplicationContext(), radio.getUrlStream());
-                    mpTask.execute();
-                }
-                currentPosition = position;
+        radioList.setOnItemClickListener(new DrawerClickListener());
 
-            }
-        });
+//        radioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if(mTask != null) {
+//                    mTask.stop();
+//                }
+//                if(currentPosition == position) {
+//                    currentPosition = Integer.MAX_VALUE;
+//                    mTask.stop();
+//                    return;
+//                }
+//                mTask = new MediaPlayerTask(getApplicationContext(), radios.get(position).getUrlStream());
+//                mTask.execute();
+//                currentPosition = position;
+//            }
+//        });
     }
 
     private void fillRadio(ArrayList<Radio> radios) {
-        radios.add(new Radio("Radio Record", "Station, Deep, Breaks, Dancecore, Dubstep, Trap," +
-                "Hardstyle, Rock",
+        radios.add(new Radio("Radio Record", "Station, Deep, Breaks, Dancecore, Dubstep, Trap",
                 BitmapFactory.decodeResource(getResources(), R.drawable.record),
                 "http://online.radiorecord.ru:8101/rr_128"));
         radios.add(new Radio("Biker-FM", "Rock",
@@ -109,5 +124,29 @@ public class FirstActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class DrawerClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    private void selectItem(int position) {
+        if(position == currentDrawerPosition) {
+            drawerLayout.closeDrawer(rootLeft);
+        }
+        else {
+            RadioFragment fragment = new RadioFragment();
+            fragment.setRadio(radios.get(position));
+            currentDrawerPosition = position;
+
+            FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.container, fragment).commit();
+
+            drawerLayout.closeDrawer(rootLeft);
+        }
     }
 }

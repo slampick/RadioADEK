@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#db3a3a3a">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/station_name_in_fragment"
+        android:layout_above="@+id/description_in_fragment"
+        android:textSize="40sp"
+        android:textColor="#fff"
+        android:layout_alignLeft="@+id/cover_station"
+        android:layout_alignRight="@+id/cover_station"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/description_in_fragment"
+        android:layout_above="@+id/cover_station"
+        android:textSize="20sp"
+        android:textColor="#fff"
+        android:layout_alignLeft="@+id/cover_station"
+        android:layout_alignRight="@+id/cover_station"/>
+    
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:id="@+id/cover_station"
+        android:layout_centerInParent="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:src="@drawable/levo"
+            android:id="@+id/left_btn"/>
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:src="@drawable/play1"
+            android:id="@+id/stop_play_btn"/>
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:src="@drawable/pravo"
+            android:id="@+id/right_btn"/>
+
+        </LinearLayout>
+
+</RelativeLayout>
