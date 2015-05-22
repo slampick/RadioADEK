@@ -52,6 +52,8 @@ public class FirstActivity extends ActionBarActivity {
 
         radioList.setOnItemClickListener(new DrawerClickListener());
 
+        selectItem(0);
+
 //        radioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -140,7 +142,7 @@ public class FirstActivity extends ActionBarActivity {
         }
         else {
             RadioFragment fragment = new RadioFragment();
-            fragment.setRadio(radios.get(position));
+            fragment.setRadiosWithPosition(radios, position);
             currentDrawerPosition = position;
 
             FragmentManager manager = getSupportFragmentManager();
