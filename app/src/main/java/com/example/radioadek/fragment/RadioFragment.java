@@ -72,14 +72,11 @@ public class RadioFragment extends Fragment {
     }
 
     public void startPlayCurrentRadio() {
-        if(mTask != null) {
-            mTask.stop();
-        }
-        else {
+
             mTask = new MediaPlayerTask(getActivity().getApplicationContext(),
                     radios.get(currentRadioPosition).getUrlStream());
             mTask.execute();
-        }
+
     }
 
     public void updateFragment() {
