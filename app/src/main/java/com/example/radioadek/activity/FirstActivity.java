@@ -1,11 +1,14 @@
 package com.example.radioadek.activity;
 
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
-import android.support.v4.app.Fragment;
+import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +35,20 @@ public class FirstActivity extends ActionBarActivity {
     private int currentDrawerPosition = Integer.MAX_VALUE;
     private DrawerLayout drawerLayout;
 
+    ActionBarDrawerToggle toggle;
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        toggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +65,18 @@ public class FirstActivity extends ActionBarActivity {
         radioList.setAdapter(adapter);
 
         radioList.setOnItemClickListener(new DrawerClickListener());
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+
+        toggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                R.string.drawer_open,
+                R.string.drawer_closed);
+        toggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.setDrawerListener(toggle);
 
         selectItem(0);
     }
@@ -99,6 +128,9 @@ public class FirstActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        if (toggle.onOptionsItemSelected(item))
+            return true;
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
