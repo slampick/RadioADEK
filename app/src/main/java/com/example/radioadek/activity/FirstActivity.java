@@ -28,11 +28,8 @@ public class FirstActivity extends ActionBarActivity {
     private LinearLayout rootLeft;
     private ArrayList<Radio> radios;
     private ListView radioList;
-    private TextView currentPlayFlag;
 
-    private int currentPosition = Integer.MAX_VALUE;
-
-    private int currentDrawerPosition;
+    private int currentDrawerPosition = Integer.MAX_VALUE;
     private DrawerLayout drawerLayout;
 
     @Override
@@ -53,23 +50,6 @@ public class FirstActivity extends ActionBarActivity {
         radioList.setOnItemClickListener(new DrawerClickListener());
 
         selectItem(0);
-
-//        radioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if(mTask != null) {
-//                    mTask.stop();
-//                }
-//                if(currentPosition == position) {
-//                    currentPosition = Integer.MAX_VALUE;
-//                    mTask.stop();
-//                    return;
-//                }
-//                mTask = new MediaPlayerTask(getApplicationContext(), radios.get(position).getUrlStream());
-//                mTask.execute();
-//                currentPosition = position;
-//            }
-//        });
     }
 
     private void fillRadio(ArrayList<Radio> radios) {

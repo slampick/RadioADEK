@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,24 +23,18 @@ public class RadioFragment extends Fragment {
 
 
     private int currentRadioPosition;
-    ArrayList<Radio> radios;
+    private static ArrayList<Radio> radios;
 
-    private View view;
+    private View viewC;
 
     private MediaPlayerTask mTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_radio, container, false);
-        this.view = view;
+        this.viewC = view;
 
-        TextView stationName = (TextView) view.findViewById(R.id.station_name_in_fragment);
-        ImageView cover = (ImageView) view.findViewById(R.id.cover_station);
-        TextView description = (TextView) view.findViewById(R.id.description_in_fragment);
-
-        stationName.setText(radios.get(currentRadioPosition).getStationName());
-        description.setText(radios.get(currentRadioPosition).getDescription());
-        cover.setImageBitmap(radios.get(currentRadioPosition).getCover());
+        updateFragment();
 
         ImageButton playBtn = (ImageButton) view.findViewById(R.id.stop_play_btn);
 
@@ -58,16 +51,20 @@ public class RadioFragment extends Fragment {
         leftBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentRadioPosition--;
-                startPlayCurrentRadio();
+                if (currentRadioPosition > 0) {
+                    currentRadioPosition--;
+                    updateFragment();
+                }
             }
         });
 
         rightLft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentRadioPosition++;
-                startPlayCurrentRadio();
+                if (currentRadioPosition < radios.size() - 1) {
+                    currentRadioPosition++;
+                    updateFragment();
+                }
             }
         });
 
@@ -77,20 +74,22 @@ public class RadioFragment extends Fragment {
     public void startPlayCurrentRadio() {
         if(mTask != null) {
             mTask.stop();
-            mTask = null;
         }
         else {
             mTask = new MediaPlayerTask(getActivity().getApplicationContext(),
                     radios.get(currentRadioPosition).getUrlStream());
             mTask.execute();
-            TextView stationName = (TextView) view.findViewById(R.id.station_name_in_fragment);
-            ImageView cover = (ImageView) view.findViewById(R.id.cover_station);
-            TextView description = (TextView) view.findViewById(R.id.description_in_fragment);
-
-            stationName.setText(radios.get(currentRadioPosition).getStationName());
-            description.setText(radios.get(currentRadioPosition).getDescription());
-            cover.setImageBitmap(radios.get(currentRadioPosition).getCover());
         }
+    }
+
+    public void updateFragment() {
+        TextView stationName = (TextView) viewC.findViewById(R.id.station_name_in_fragment);
+        ImageView cover = (ImageView) viewC.findViewById(R.id.cover_station);
+        TextView description = (TextView) viewC.findViewById(R.id.description_in_fragment);
+
+        stationName.setText(radios.get(currentRadioPosition).getStationName());
+        description.setText(radios.get(currentRadioPosition).getDescription());
+        cover.setImageBitmap(radios.get(currentRadioPosition).getCover());
     }
 
     public void setRadiosWithPosition(ArrayList<Radio> radios, int position) {
